@@ -35,6 +35,9 @@ class BookList(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ['title', 'price', 'stock']
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
