@@ -14,6 +14,7 @@ class Client(models.Model):
     surname = models.CharField(max_length=45)
     address = models.CharField(max_length=45)
     phone = models.CharField(max_length=15)
+    owner = models.ForeignKey('auth.User', related_name='clients', on_delete=models.CASCADE)
 
 
 class Order(models.Model):
@@ -30,6 +31,7 @@ class Book(models.Model):
     ISBN = models.CharField(max_length=13)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
+    owner = models.ForeignKey('auth.User', related_name='books', on_delete=models.CASCADE)
 
 class Payment(models.Model):
     date = models.DateTimeField()
