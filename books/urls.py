@@ -11,6 +11,11 @@ urlpatterns = [
     path('orders/<int:pk>', views.OrderDetail.as_view(), name=views.OrderDetail.name),
     path('employees/', views.EmployeeList.as_view(), name=views.EmployeeList.name),
     path('employees/<int:pk>', views.EmployeeDetail.as_view(), name=views.EmployeeDetail.name),
+    path('users/', views.UserList.as_view(), name=views.UserList.name),
+    path('users/<int:pk>', views.UserDetail.as_view(), name=views.UserDetail.name),
     path('api-auth/', include('rest_framework.urls')),
 ]
 
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls')),
+]

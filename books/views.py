@@ -2,8 +2,11 @@ from rest_framework import generics
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from .serializers import BookSerializer, OrderSerializer, EmployeeSerializer, ClientSerializer, PaymentSerializer
+from .serializers import UserSerializer
 from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter, FilterSet, DateFromToRangeFilter, RangeFilter
 from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from .models import Book, Client, Order, Employee
@@ -31,6 +34,9 @@ class BookList(generics.ListCreateAPIView):
     filterset_class = BookFilter
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ['title', 'price', 'stock']
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
@@ -85,13 +91,22 @@ class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EmployeeSerializer
     name = 'employee-detail'
 
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-list'
 
-# class ApiRoot(generics.GenericAPIView):
-#     name = 'api-root'
-#     def get(self, request, *args, **kwargs):
-#         return Response({'book-categories': reverse(BookCategoryList.name, request=request),
-#                          'books': reverse(BookList.name, request=request),
-#                          'clients': reverse(ClientList.name, request=request),
-#                          'orders': reverse(OrderList.name, request=request),
-#                          'users': reverse(UserList.name, request=request)
-# })
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-detail'
+
+
+class ApiRoot(generics.GenericAPIView):
+     name = 'api-root'
+     def get(self, request, *args, **kwargs):
+         return Response({'books': reverse(BookList.name, request=request),
+                          'clients': reverse(ClientList.name, request=request),
+                          'orders': reverse(OrderList.name, request=request),
+                          'users': reverse(UserList.name, request=request)
+ })
