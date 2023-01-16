@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from .models import Book, Client, Order, Employee
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from .custompermissions import IsCurrentUserOwnerOrReadOnly
 # Create your views here.
 
 
@@ -30,7 +31,7 @@ class BookList(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     name = 'book-list'
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, IsCurrentUserOwnerOrReadOnly,)
     filterset_class = BookFilter
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ['title', 'price', 'stock']
@@ -42,6 +43,7 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     name = 'book-detail'
+    permission_classes = (permissions.IsAuthenticated, IsCurrentUserOwnerOrReadOnly,)
 
 class ClientList(generics.ListCreateAPIView):
     queryset = Client.objects.all()
@@ -84,22 +86,26 @@ class EmployeeList(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_class = EmployeeFilter
     ordering_fields = ['surname', 'salary']
+    permission_classes = (permissions.IsAuthenticated, IsCurrentUserOwnerOrReadOnly,)
 
 
 class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     name = 'employee-detail'
+    permission_classes = (permissions.IsAuthenticated, IsCurrentUserOwnerOrReadOnly,)
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     name = 'user-list'
+    permission_classes = (permissions.IsAuthenticated, IsCurrentUserOwnerOrReadOnly,)
 
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     name = 'user-detail'
+    permission_classes = (permissions.IsAuthenticated, IsCurrentUserOwnerOrReadOnly,)
 
 
 class ApiRoot(generics.GenericAPIView):

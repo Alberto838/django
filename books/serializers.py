@@ -40,9 +40,9 @@ class Book_has_OrderSerializer(serializers.HyperlinkedModelSerializer):
         model = Book_has_Order
         fields = ['Book_idBook', 'Order_idOrder']
 
-# class UserSerializer(serializers.ModelSerializer):
-#     books = serializers.PrimaryKeyRelatedField(many=True, queryset=Book.objects.all())
-#
-#     class Meta:
-#         model = User
-#         fields = ['id', 'username', 'books']
+class UserSerializer(serializers.ModelSerializer):
+    books = serializers.PrimaryKeyRelatedField(many=True, queryset=Book.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'books']
